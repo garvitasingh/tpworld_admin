@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:tpworld_admin/view/admin/widget/notification_dialog.dart';
 
 import '../../utils/colors.dart';
 import 'widget/form_widget.dart';
-import 'widget/notification_dialog.dart';
 
 class AdminHomePageView extends StatefulWidget {
   const AdminHomePageView({super.key});
@@ -33,6 +33,7 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                 borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(12),
                     bottomRight: Radius.circular(12))),
+            clipBehavior: Clip.none,
             automaticallyImplyLeading: false,
             backgroundColor: const Color(0xff334D8F),
             title: Row(
@@ -67,22 +68,18 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
               ],
             ),
             actions: [
-              InkWell(
-                  child: Container(
-                    margin: EdgeInsets.only(right: 15),
-                    child: Image.asset(
-                      "assets/images/notify.png",
-                      height: 25,
-                      width: 25,
-                    ),
+              IconButton(
+                  icon: const Icon(
+                    Icons.notifications_active,
+                    color: Colors.white,
                   ),
-                  onTap: () {
+                  onPressed: () {
                     showDialog(
                         barrierColor: Colors.transparent,
                         barrierLabel: "fff",
                         context: context,
                         builder: (BuildContext context) {
-                          return NotificationDialog();
+                          return const NotificationDialog();
                         });
                   })
             ],
