@@ -509,7 +509,7 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                                 ),
                                               ),
                                               const SizedBox(
-                                                width: 170,
+                                                width: 130,
                                               ),
                                               Image.asset(
                                                 "assets/images/delete.png",
@@ -914,7 +914,7 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                                 ),
                                               ),
                                               const SizedBox(
-                                                width: 170,
+                                                width: 130,
                                               ),
                                               Image.asset(
                                                 "assets/images/delete.png",
