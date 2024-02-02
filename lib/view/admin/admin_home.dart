@@ -46,11 +46,11 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                 const SizedBox(
                   width: 10,
                 ),
-                 Column(
+                 const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "John Bold",
+                      "Admin",
                       style: TextStyle(
                           fontSize: 16,
                           color: Colors.white,
@@ -478,7 +478,7 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                                   Icons.keyboard_arrow_up))
                                         ],
                                       ),
-                                      Divider(),
+                                      const Divider(),
                                       ListView.builder(
                                         shrinkWrap: true,
                                         itemCount: inde == index?2:0,
@@ -883,7 +883,7 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                                   Icons.keyboard_arrow_up))
                                         ],
                                       ),
-                                      Divider(),
+                                      const Divider(),
                                       ListView.builder(
                                         shrinkWrap: true,
                                         itemCount: inde == index?2:0,

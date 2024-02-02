@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "982537333615",
+    "project_id": "tpworld-21fcc",
+    "storage_bucket": "tpworld-21fcc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:982537333615:android:d1a636797c22d09be8969a",
+        "android_client_info": {
+          "package_name": "com.example.tpworld_admin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsNlDBmvCtNv9jzeU17QGj1M-DdMlPB5k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:982537333615:android:7711e0da8cf253d9e8969a",
+        "android_client_info": {
+          "package_name": "com.example.useradminapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsNlDBmvCtNv9jzeU17QGj1M-DdMlPB5k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

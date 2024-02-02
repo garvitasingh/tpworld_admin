@@ -36,7 +36,7 @@ class _AdminBannersViewState extends State<AdminBannersView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "John Bold",
+                      "Admin",
                       style: TextStyle(
                           fontSize: 16,
                           color: Colors.white,

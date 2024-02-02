@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tpworld_admin/view/admin/admin_home.dart';
+import 'package:tpworld_admin/view/admin/dashboard.dart';
 import 'package:tpworld_admin/view/splash_view.dart';
 
 import 'view/admin/admin_login.dart';
@@ -11,6 +12,7 @@ class Routes {
   static const String register = '/register';
   static const String home = '/home';
   static const String profile = '/profile';
+  static const String dashboard = '/dashboard';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -20,6 +22,8 @@ class Routes {
         return MaterialPageRoute(builder: (_) => AdminLoginView());
       case home:
         return MaterialPageRoute(builder: (_) => AdminHomePageView());
+        case dashboard:
+        return MaterialPageRoute(builder: (_) => DashBoardView(index: 0,));
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
