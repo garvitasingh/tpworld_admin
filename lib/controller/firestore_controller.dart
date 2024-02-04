@@ -1,24 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class FirestoreService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final CollectionReference<Map<String, dynamic>> _usersCollection =
       FirebaseFirestore.instance.collection('users');
   dynamic userProfile;
-  Future<List<Map<String, dynamic>>> getAllProfiles() async {
-    try {
-      QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await _usersCollection.get();
-      print(querySnapshot);
-      // Extract data from QuerySnapshot
-      List<Map<String, dynamic>> profiles = querySnapshot.docs
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn googleSignIn = GoogleSignIn();
+
+  Stream<List<Map<String, dynamic>>> getProfilesStream() {
+    return _usersCollection.snapshots().map((querySnapshot) {
+      return querySnapshot.docs
           .map((doc) => doc.data() as Map<String, dynamic>)
           .toList();
-
-      return profiles;
-    } catch (e) {
-      print('Error getting profiles: $e');
-      return [];
-    }
+    });
   }
 
   Future<Object?> getUserProfile(String userId) async {
@@ -38,5 +35,19 @@ class FirestoreService {
       print('Error getting user profile: $e');
       return null;
     }
+  }
+
+  isHide(uid, hide) async {
+    await _firestore
+        .collection('users')
+        .doc(uid)
+        .set({'isHide': hide}, SetOptions(merge: true));
+  }
+
+  isDelete(uid) async {
+    await _firestore
+        .collection('users')
+        .doc(uid)
+        .set({'isdelete': "true"}, SetOptions(merge: true));
   }
 }

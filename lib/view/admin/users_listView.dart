@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tpworld_admin/controller/firestore_controller.dart';
@@ -92,13 +93,25 @@ class _UsersListViewState extends State<UsersListView> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  "Users List (${userslength})",
-                  style: const TextStyle(
-                      fontSize: 18,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w700),
-                ),
+                StreamBuilder<List<Map<String, dynamic>>>(
+                    stream: _firestoreService.getProfilesStream(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const SizedBox();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return const Text('Users List is empty!');
+                      }
+                      List<Map<String, dynamic>> profiles = snapshot.data!;
+                      return Text(
+                        "Users List (${profiles.length})",
+                        style: const TextStyle(
+                            fontSize: 18,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w700),
+                      );
+                    }),
                 const SizedBox(
                   width: 100,
                 ),
@@ -117,10 +130,10 @@ class _UsersListViewState extends State<UsersListView> {
           const SizedBox(
             height: 20,
           ),
-          FutureBuilder<List<Map<String, dynamic>>>(
-            future: _firestoreService.getAllProfiles(),
+          StreamBuilder<List<Map<String, dynamic>>>(
+            stream: _firestoreService.getProfilesStream(),
             builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.active) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
                 return const SizedBox();
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
@@ -140,50 +153,90 @@ class _UsersListViewState extends State<UsersListView> {
                             MaterialPageRoute(
                                 builder: (_) => const AdminBannersView()));
                       },
-                      child: ListTile(
-                        leading: Image.asset(
-                          "assets/images/avatar.png",
-                          height: 40,
-                          fit: BoxFit.cover,
-                        ),
-                        title: Text(
-                          profiles[index]['name'].toString(),
-                          style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w400),
-                        ),
-                        subtitle: Text(
-                          profiles[index]['phone'].toString(),
-                          style: const TextStyle(
-                              fontSize: 18,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w700),
-                        ),
-                        trailing: Container(
-                          width: 100,
-                          child: Row(
-                            children: [
-                              IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      inde = index;
-                                    });
-                                  },
-                                  icon: Icon(
-                                    inde == index
-                                        ? Icons.visibility_off
-                                        : Icons.visibility,
-                                    color: Colors.red,
-                                  )),
-                              Image.asset(
-                                "assets/images/delete.png",
-                                height: 30,
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
+                      child: profiles[index]['isdelete'].toString() == "true"
+                          ? SizedBox()
+                          : ListTile(
+                              leading: profiles[index]['profileImage'] == "" ||
+                                      profiles[index]['profileImage'] == null
+                                  ? const CircleAvatar(
+                                      radius: 30,
+                                      backgroundImage: AssetImage(
+                                          "assets/images/avatar.png"),
+                                    )
+                                  : CircleAvatar(
+                                      radius: 30,
+                                      backgroundImage: NetworkImage(
+                                          profiles[index]['profileImage']
+                                              .toString()),
+                                    ),
+                              title: Text(
+                                profiles[index]['name'].toString(),
+                                style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                              subtitle: Text(
+                                profiles[index]['phone'].toString(),
+                                style: const TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                              trailing: Container(
+                                width: 100,
+                                child: Row(
+                                  children: [
+                                    profiles[index]['isHide'].toString() ==
+                                            "true"
+                                        ? IconButton(
+                                            onPressed: () {
+                                              _firestoreService.isHide(
+                                                  profiles[index]['id']
+                                                      .toString(),
+                                                  'false');
+                                            },
+                                            icon: const Icon(
+                                              Icons.visibility_off,
+                                              color: Colors.red,
+                                            ))
+                                        : IconButton(
+                                            onPressed: () {
+                                              _firestoreService.isHide(
+                                                  profiles[index]['id']
+                                                      .toString(),
+                                                  'true');
+                                            },
+                                            icon: const Icon(
+                                              Icons.visibility,
+                                              color: Colors.green,
+                                            )),
+                                    InkWell(
+                                      onTap: () {
+                                        AwesomeDialog(
+                                          context: context,
+                                          dialogType: DialogType.question,
+                                          animType: AnimType.rightSlide,
+                                          title: 'Action',
+                                          desc:
+                                              'Are you sure want to delete this user?',
+                                          btnCancelOnPress: () {},
+                                          btnOkOnPress: () {
+                                            _firestoreService.isDelete(
+                                                profiles[index]['id']
+                                                    .toString());
+                                          },
+                                        ).show();
+                                      },
+                                      child: Image.asset(
+                                        "assets/images/delete.png",
+                                        height: 30,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
                     );
                   },
                 );
