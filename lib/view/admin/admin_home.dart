@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tpworld_admin/view/admin/widget/amount_dialog.dart';
 import 'package:tpworld_admin/view/admin/widget/notification_dialog.dart';
 
 import '../../utils/colors.dart';
@@ -20,6 +21,7 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
     _tabController = TabController(length: 2, vsync: this);
     super.initState();
   }
+
   DateTime? currentBackPressTime;
   Future<bool> onWillPop(BuildContext context) async {
     DateTime now = DateTime.now();
@@ -40,7 +42,6 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
     }
   }
 
-
   int inde = -1;
   @override
   Widget build(BuildContext context) {
@@ -49,7 +50,8 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
       onWillPop: () async => onWillPop(context),
       child: Scaffold(
         appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(80.0), // here the desired height
+            preferredSize:
+                const Size.fromHeight(80.0), // here the desired height
             child: AppBar(
               shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
@@ -68,7 +70,7 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                   const SizedBox(
                     width: 10,
                   ),
-                   const Column(
+                  const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
@@ -90,20 +92,25 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                 ],
               ),
               actions: [
-                IconButton(
-                    icon: const Icon(
-                      Icons.notifications_active,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      showDialog(
-                          barrierColor: Colors.transparent,
-                          barrierLabel: "fff",
-                          context: context,
-                          builder: (BuildContext context) {
-                            return const NotificationDialog();
-                          });
-                    })
+               InkWell(
+                 onTap: () {
+                   showDialog(
+                       barrierColor: Colors.transparent,
+                       barrierLabel: "fff",
+                       context: context,
+                       builder: (BuildContext context) {
+                         return const NotificationDialog();
+                       });
+                 },
+                 child: Container(
+                   margin: const EdgeInsets.only(right: 15),
+                   child: Image.asset(
+                     "assets/images/notify.png",
+                     height: 25,
+                     width: 25,
+                   ),
+                 ),
+               )
               ],
               elevation: 0,
               bottom: PreferredSize(
@@ -153,7 +160,7 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                               Tab(
                                 text: 'Tab 1',
                               ),
-      
+
                               // second tab [you can add an icon using the icon property]
                               Tab(
                                 text: 'Tab 2',
@@ -182,57 +189,69 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                           height: 50,
                         ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            InkWell(
-                              onTap: () {
-                                showDialog(
-                                    barrierColor: Colors.transparent,
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return FormDialogView(
-                                        text: "SHELL",
-                                      );
-                                    });
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: const Color(0xff4ACA36)),
-                                    borderRadius: BorderRadius.circular(6)),
-                                child: const Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "  SHELL CALL  ",
-                                    style: TextStyle(color: Color(0xff4ACA36)),
-                                  ),
-                                ),
-                              ),
-                            ),
+                            // InkWell(
+                            //   onTap: () {
+                            //     showDialog(
+                            //         barrierColor: Colors.transparent,
+                            //         context: context,
+                            //         builder: (BuildContext context) {
+                            //           return FormDialogView(
+                            //             text: "SHELL",
+                            //           );
+                            //         });
+                            //   },
+                            //   child: Container(
+                            //     decoration: BoxDecoration(
+                            //         border: Border.all(
+                            //             color: const Color(0xff4ACA36)),
+                            //         borderRadius: BorderRadius.circular(6)),
+                            //     child: const Padding(
+                            //       padding: EdgeInsets.all(8.0),
+                            //       child: Text(
+                            //         "  SHELL CALL  ",
+                            //         style: TextStyle(color: Color(0xff4ACA36)),
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
                             const SizedBox(
                               width: 30,
                             ),
                             InkWell(
                               onTap: () {
                                 showDialog(
-                                    barrierColor: Colors.transparent,
+                                    // barrierColor: Colors.transparent,
                                     context: context,
                                     builder: (BuildContext context) {
                                       return FormDialogView(
-                                        text: "BUY",
+                                        text: "BUY CALL",
                                       );
                                     });
                               },
                               child: Container(
                                 decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: const Color(0xff4ACA36)),
-                                    borderRadius: BorderRadius.circular(6)),
+                                  color: Colors.white,
+                                  border: Border.all(
+                                      color: const Color(0xff4ACA36)),
+                                  borderRadius: BorderRadius.circular(6),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Color(0x234ACA36),
+                                      blurRadius: 4,
+                                      offset: Offset(0, 4),
+                                      spreadRadius: 0,
+                                    )
+                                  ],
+                                ),
                                 child: const Padding(
                                   padding: EdgeInsets.all(8.0),
                                   child: Text(
-                                    "  BUY CALL  ",
-                                    style: TextStyle(color: Color(0xff4ACA36)),
+                                    "   Add Call   ",
+                                    style: TextStyle(
+                                        color: Color(0xff4ACA36),
+                                        fontWeight: FontWeight.w500),
                                   ),
                                 ),
                               ),
@@ -247,10 +266,10 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                               return Stack(
                                 children: [
                                   Container(
-                                    margin:
-                                    const EdgeInsets.symmetric(vertical: 10),
-                                    padding:
-                                    const EdgeInsets.symmetric(vertical: 10),
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 10),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       border: Border.all(color: BLUE500_COLOR),
@@ -271,17 +290,39 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                               left: 8.0, right: 8, bottom: 8),
                                           child: Row(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               SizedBox(
-                                                  width: w * 0.75,
+                                                  width: w * 0.6,
                                                   child: const Text(
                                                     'Sample text from admin',
                                                     style: TextStyle(
                                                       fontSize: 17,
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                     ),
                                                   )),
+                                              Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Image.asset(
+                                                    "assets/images/eye.png",
+                                                    // height: 11,
+                                                    width: 15,
+                                                  ),
+                                                  SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  Text(
+                                                    "25",
+                                                    style:
+                                                        TextStyle(fontSize: 8),
+                                                  )
+                                                ],
+                                              ),
                                               InkWell(
                                                 child: Container(
                                                     padding: const EdgeInsets
@@ -291,19 +332,19 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                                     decoration: ShapeDecoration(
                                                       color: Colors.white,
                                                       shape:
-                                                      RoundedRectangleBorder(
+                                                          RoundedRectangleBorder(
                                                         side: const BorderSide(
                                                             width: 1,
                                                             color: Color(
                                                                 0xFF4ACA36)),
                                                         borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
+                                                            BorderRadius
+                                                                .circular(5),
                                                       ),
                                                       shadows: const [
                                                         BoxShadow(
                                                           color:
-                                                          Color(0x234ACA36),
+                                                              Color(0x234ACA36),
                                                           blurRadius: 4,
                                                           offset: Offset(0, 4),
                                                           spreadRadius: 0,
@@ -313,11 +354,12 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                                     child: const Text(
                                                       'BUY',
                                                       style: TextStyle(
-                                                        color: Color(0xFF4ACA36),
+                                                        color:
+                                                            Color(0xFF4ACA36),
                                                         fontSize: 15,
                                                         fontFamily: 'Rubik',
                                                         fontWeight:
-                                                        FontWeight.w500,
+                                                            FontWeight.w500,
                                                         height: 0,
                                                       ),
                                                     )),
@@ -333,8 +375,61 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                         ),
                                         Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
+                                              MainAxisAlignment.spaceEvenly,
                                           children: [
+                                            InkWell(
+                                              onTap: () {
+                                                showDialog(
+                                                    // barrierColor: Colors.transparent,
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return AmountDialogView(
+                                                        text: "UPDATE",
+                                                      );
+                                                    });
+                                              },
+                                              child: Column(
+                                                children: [
+                                                  SizedBox(
+                                                    height: 20,
+                                                    child: Row(
+                                                      children: [
+                                                        const Align(
+                                                          alignment: Alignment
+                                                              .bottomLeft,
+                                                          child: Text(
+                                                            '100 ',
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              height: 0,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Align(
+                                                          alignment: Alignment
+                                                              .topRight,
+                                                          child: Image.asset(
+                                                            "assets/images/tick.png",
+                                                            height: 11,
+                                                            width: 11,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  const Text(
+                                                    'Target-1',
+                                                    style: TextStyle(
+                                                      color: Color(0xFFA8A8A8),
+                                                      fontSize: 12,
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
                                             Column(
                                               children: [
                                                 SizedBox(
@@ -342,22 +437,22 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                                   child: Row(
                                                     children: [
                                                       const Align(
-                                                        alignment:
-                                                        Alignment.bottomLeft,
+                                                        alignment: Alignment
+                                                            .bottomLeft,
                                                         child: Text(
                                                           '100 ',
                                                           style: TextStyle(
                                                             fontWeight:
-                                                            FontWeight.bold,
+                                                                FontWeight.bold,
                                                             height: 0,
                                                           ),
                                                         ),
                                                       ),
                                                       Align(
                                                         alignment:
-                                                        Alignment.topRight,
+                                                            Alignment.topRight,
                                                         child: Image.asset(
-                                                          "assets/images/tick.png",
+                                                          "assets/images/tick_light.png",
                                                           height: 11,
                                                           width: 11,
                                                         ),
@@ -366,7 +461,7 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                                   ),
                                                 ),
                                                 const Text(
-                                                  'Target-1',
+                                                  'Target-2',
                                                   style: TextStyle(
                                                     color: Color(0xFFA8A8A8),
                                                     fontSize: 12,
@@ -381,22 +476,22 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                                   child: Row(
                                                     children: [
                                                       const Align(
-                                                        alignment:
-                                                        Alignment.bottomLeft,
+                                                        alignment: Alignment
+                                                            .bottomLeft,
                                                         child: Text(
                                                           '100 ',
                                                           style: TextStyle(
                                                             fontWeight:
-                                                            FontWeight.bold,
+                                                                FontWeight.bold,
                                                             height: 0,
                                                           ),
                                                         ),
                                                       ),
                                                       Align(
                                                         alignment:
-                                                        Alignment.topRight,
+                                                            Alignment.topRight,
                                                         child: Image.asset(
-                                                          "assets/images/tick.png",
+                                                          "assets/images/tick_red.png",
                                                           height: 11,
                                                           width: 11,
                                                         ),
@@ -405,7 +500,7 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                                   ),
                                                 ),
                                                 const Text(
-                                                  'Target-1',
+                                                  'Stop Loss',
                                                   style: TextStyle(
                                                     color: Color(0xFFA8A8A8),
                                                     fontSize: 12,
@@ -415,41 +510,36 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                             ),
                                             Column(
                                               children: [
+                                                const Text(
+                                                  '10,000',
+                                                  style: TextStyle(
+                                                    color: Color(0xFF4ACA36),
+                                                    fontWeight: FontWeight.bold,
+                                                    height: 0,
+                                                  ),
+                                                ),
                                                 SizedBox(
                                                   height: 20,
                                                   child: Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.end,
                                                     children: [
-                                                      const Align(
-                                                        alignment:
-                                                        Alignment.bottomLeft,
-                                                        child: Text(
-                                                          '100 ',
-                                                          style: TextStyle(
-                                                            fontWeight:
-                                                            FontWeight.bold,
-                                                            height: 0,
-                                                          ),
-                                                        ),
+                                                      Image.asset(
+                                                        "assets/images/profit.png",
+                                                        height: 15,
+                                                        width: 15,
                                                       ),
-                                                      Align(
-                                                        alignment:
-                                                        Alignment.topRight,
-                                                        child: Image.asset(
-                                                          "assets/images/tick.png",
-                                                          height: 11,
-                                                          width: 11,
+                                                      Text(
+                                                        ' Profit',
+                                                        style: TextStyle(
+                                                          color:
+                                                              Color(0xFFA8A8A8),
+                                                          fontSize: 12,
                                                         ),
                                                       ),
                                                     ],
                                                   ),
                                                 ),
-                                                const Text(
-                                                  'Target-1',
-                                                  style: TextStyle(
-                                                    color: Color(0xFFA8A8A8),
-                                                    fontSize: 12,
-                                                  ),
-                                                )
                                               ],
                                             ),
                                           ],
@@ -468,20 +558,22 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                                     height: 45,
                                                     decoration: BoxDecoration(
                                                         borderRadius:
-                                                        BorderRadius.circular(
-                                                            6),
+                                                            BorderRadius
+                                                                .circular(6),
                                                         border: Border.all(
-                                                            color: Colors.blue)),
+                                                            color:
+                                                                Colors.blue)),
                                                     child: TextFormField(
                                                       decoration:
-                                                      const InputDecoration(
-                                                          contentPadding:
-                                                          EdgeInsets.all(
-                                                              10),
-                                                          border: InputBorder
-                                                              .none,
-                                                          hintText:
-                                                          "Enter Message"),
+                                                          const InputDecoration(
+                                                              contentPadding:
+                                                                  EdgeInsets
+                                                                      .all(10),
+                                                              border:
+                                                                  InputBorder
+                                                                      .none,
+                                                              hintText:
+                                                                  "Enter Message"),
                                                     ))),
                                             Image.asset(
                                               "assets/images/send.png",
@@ -494,20 +586,21 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                                   });
                                                 },
                                                 icon: inde == index
-                                                    ? const Icon(
-                                                    Icons.keyboard_arrow_down)
-                                                    : const Icon(
-                                                    Icons.keyboard_arrow_up))
+                                                    ? const Icon(Icons
+                                                        .keyboard_arrow_down)
+                                                    : const Icon(Icons
+                                                        .keyboard_arrow_up))
                                           ],
                                         ),
                                         const Divider(),
                                         ListView.builder(
                                           shrinkWrap: true,
-                                          itemCount: inde == index?2:0,
+                                          itemCount: inde == index ? 2 : 0,
                                           itemBuilder: (context, index) {
                                             return Row(
                                               mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 const SizedBox(
                                                   width: 10,
@@ -577,7 +670,7 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                       ],
                     ),
                   ),
-      
+
                   // second tab bar view widget
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -586,65 +679,6 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                         const SizedBox(
                           height: 50,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                showDialog(
-                                    barrierColor: Colors.transparent,
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return FormDialogView(
-                                        text: "SHELL",
-                                      );
-                                    });
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: const Color(0xff4ACA36)),
-                                    borderRadius: BorderRadius.circular(6)),
-                                child: const Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "  SHELL CALL  ",
-                                    style: TextStyle(color: Color(0xff4ACA36)),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 30,
-                            ),
-                            InkWell(
-                              onTap: () {
-                                showDialog(
-                                    barrierColor: Colors.transparent,
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return FormDialogView(
-                                        text: "BUY",
-                                      );
-                                    });
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: const Color(0xff4ACA36)),
-                                    borderRadius: BorderRadius.circular(6)),
-                                child: const Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "  BUY CALL  ",
-                                    style: TextStyle(color: Color(0xff4ACA36)),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
                         Expanded(
                           child: ListView.builder(
                             itemCount: 2,
@@ -652,10 +686,10 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                               return Stack(
                                 children: [
                                   Container(
-                                    margin:
-                                    const EdgeInsets.symmetric(vertical: 10),
-                                    padding:
-                                    const EdgeInsets.symmetric(vertical: 10),
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 10),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       border: Border.all(color: BLUE500_COLOR),
@@ -679,14 +713,36 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                             MainAxisAlignment.spaceBetween,
                                             children: [
                                               SizedBox(
-                                                  width: w * 0.75,
+                                                  width: w * 0.6,
                                                   child: const Text(
                                                     'Sample text from admin',
                                                     style: TextStyle(
                                                       fontSize: 17,
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                      FontWeight.bold,
                                                     ),
                                                   )),
+                                              Column(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                                children: [
+                                                  Image.asset(
+                                                    "assets/images/eye.png",
+                                                    // height: 11,
+                                                    width: 15,
+                                                  ),
+                                                  SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  Text(
+                                                    "25",
+                                                    style:
+                                                    TextStyle(fontSize: 8),
+                                                  )
+                                                ],
+                                              ),
                                               InkWell(
                                                 child: Container(
                                                     padding: const EdgeInsets
@@ -702,8 +758,8 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                                             color: Color(
                                                                 0xFF4ACA36)),
                                                         borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
+                                                        BorderRadius
+                                                            .circular(5),
                                                       ),
                                                       shadows: const [
                                                         BoxShadow(
@@ -718,7 +774,8 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                                     child: const Text(
                                                       'BUY',
                                                       style: TextStyle(
-                                                        color: Color(0xFF4ACA36),
+                                                        color:
+                                                        Color(0xFF4ACA36),
                                                         fontSize: 15,
                                                         fontFamily: 'Rubik',
                                                         fontWeight:
@@ -740,6 +797,59 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                           mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
                                           children: [
+                                            InkWell(
+                                              onTap: () {
+                                                showDialog(
+                                                  // barrierColor: Colors.transparent,
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return AmountDialogView(
+                                                        text: "UPDATE",
+                                                      );
+                                                    });
+                                              },
+                                              child: Column(
+                                                children: [
+                                                  SizedBox(
+                                                    height: 20,
+                                                    child: Row(
+                                                      children: [
+                                                        const Align(
+                                                          alignment: Alignment
+                                                              .bottomLeft,
+                                                          child: Text(
+                                                            '100 ',
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                              FontWeight
+                                                                  .bold,
+                                                              height: 0,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Align(
+                                                          alignment: Alignment
+                                                              .topRight,
+                                                          child: Image.asset(
+                                                            "assets/images/tick.png",
+                                                            height: 11,
+                                                            width: 11,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  const Text(
+                                                    'Target-1',
+                                                    style: TextStyle(
+                                                      color: Color(0xFFA8A8A8),
+                                                      fontSize: 12,
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
                                             Column(
                                               children: [
                                                 SizedBox(
@@ -747,8 +857,8 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                                   child: Row(
                                                     children: [
                                                       const Align(
-                                                        alignment:
-                                                        Alignment.bottomLeft,
+                                                        alignment: Alignment
+                                                            .bottomLeft,
                                                         child: Text(
                                                           '100 ',
                                                           style: TextStyle(
@@ -762,7 +872,7 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                                         alignment:
                                                         Alignment.topRight,
                                                         child: Image.asset(
-                                                          "assets/images/tick.png",
+                                                          "assets/images/tick_light.png",
                                                           height: 11,
                                                           width: 11,
                                                         ),
@@ -771,7 +881,7 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                                   ),
                                                 ),
                                                 const Text(
-                                                  'Target-1',
+                                                  'Target-2',
                                                   style: TextStyle(
                                                     color: Color(0xFFA8A8A8),
                                                     fontSize: 12,
@@ -786,8 +896,8 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                                   child: Row(
                                                     children: [
                                                       const Align(
-                                                        alignment:
-                                                        Alignment.bottomLeft,
+                                                        alignment: Alignment
+                                                            .bottomLeft,
                                                         child: Text(
                                                           '100 ',
                                                           style: TextStyle(
@@ -801,7 +911,7 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                                         alignment:
                                                         Alignment.topRight,
                                                         child: Image.asset(
-                                                          "assets/images/tick.png",
+                                                          "assets/images/tick_red.png",
                                                           height: 11,
                                                           width: 11,
                                                         ),
@@ -810,7 +920,7 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                                   ),
                                                 ),
                                                 const Text(
-                                                  'Target-1',
+                                                  'Stop Loss',
                                                   style: TextStyle(
                                                     color: Color(0xFFA8A8A8),
                                                     fontSize: 12,
@@ -820,41 +930,36 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                             ),
                                             Column(
                                               children: [
+                                                const Text(
+                                                  '10,000',
+                                                  style: TextStyle(
+                                                    color: Color(0xFF4ACA36),
+                                                    fontWeight: FontWeight.bold,
+                                                    height: 0,
+                                                  ),
+                                                ),
                                                 SizedBox(
                                                   height: 20,
                                                   child: Row(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
                                                     children: [
-                                                      const Align(
-                                                        alignment:
-                                                        Alignment.bottomLeft,
-                                                        child: Text(
-                                                          '100 ',
-                                                          style: TextStyle(
-                                                            fontWeight:
-                                                            FontWeight.bold,
-                                                            height: 0,
-                                                          ),
-                                                        ),
+                                                      Image.asset(
+                                                        "assets/images/profit.png",
+                                                        height: 15,
+                                                        width: 15,
                                                       ),
-                                                      Align(
-                                                        alignment:
-                                                        Alignment.topRight,
-                                                        child: Image.asset(
-                                                          "assets/images/tick.png",
-                                                          height: 11,
-                                                          width: 11,
+                                                      Text(
+                                                        ' Profit',
+                                                        style: TextStyle(
+                                                          color:
+                                                          Color(0xFFA8A8A8),
+                                                          fontSize: 12,
                                                         ),
                                                       ),
                                                     ],
                                                   ),
                                                 ),
-                                                const Text(
-                                                  'Target-1',
-                                                  style: TextStyle(
-                                                    color: Color(0xFFA8A8A8),
-                                                    fontSize: 12,
-                                                  ),
-                                                )
                                               ],
                                             ),
                                           ],
@@ -873,17 +978,19 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                                     height: 45,
                                                     decoration: BoxDecoration(
                                                         borderRadius:
-                                                        BorderRadius.circular(
-                                                            6),
+                                                        BorderRadius
+                                                            .circular(6),
                                                         border: Border.all(
-                                                            color: Colors.blue)),
+                                                            color:
+                                                            Colors.blue)),
                                                     child: TextFormField(
                                                       decoration:
                                                       const InputDecoration(
                                                           contentPadding:
-                                                          EdgeInsets.all(
-                                                              10),
-                                                          border: InputBorder
+                                                          EdgeInsets
+                                                              .all(10),
+                                                          border:
+                                                          InputBorder
                                                               .none,
                                                           hintText:
                                                           "Enter Message"),
@@ -899,20 +1006,21 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                                   });
                                                 },
                                                 icon: inde == index
-                                                    ? const Icon(
-                                                    Icons.keyboard_arrow_down)
-                                                    : const Icon(
-                                                    Icons.keyboard_arrow_up))
+                                                    ? const Icon(Icons
+                                                    .keyboard_arrow_down)
+                                                    : const Icon(Icons
+                                                    .keyboard_arrow_up))
                                           ],
                                         ),
                                         const Divider(),
                                         ListView.builder(
                                           shrinkWrap: true,
-                                          itemCount: inde == index?2:0,
+                                          itemCount: inde == index ? 2 : 0,
                                           itemBuilder: (context, index) {
                                             return Row(
                                               mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                              MainAxisAlignment
+                                                  .spaceBetween,
                                               children: [
                                                 const SizedBox(
                                                   width: 10,
@@ -982,7 +1090,6 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                       ],
                     ),
                   ),
-      
                 ],
               ),
             ),

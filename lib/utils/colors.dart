@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 const Color PRIMARY_COLOR = Color(0xff334d8f);
 const Color BLUE800_COLOR = Color(0xff00367f);
 const Color BLUE500_COLOR = Color(0xff0063e6);
+const Color BLUE400_COLOR = Color(0xff3382eb);
 const Color BLUE300_COLOR = Color(0xff5496ee);
 const Color RED_COLOR = Color(0xffec1616);
 const Color GREEN_COLOR = Color(0xff4aca36);
