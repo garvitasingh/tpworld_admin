@@ -48,6 +48,7 @@ class AdminLoginView extends StatelessWidget {
                   height: 20,
                 ),
                 CustomTextFieldWidget(
+                  textInputType: false,
                   controller: _firstController,
                   label: "Email",
                   isSuffix: false,
@@ -56,6 +57,7 @@ class AdminLoginView extends StatelessWidget {
                   height: 20,
                 ),
                 CustomTextFieldWidget(
+                  textInputType: false,
                   controller: _lastController,
                   label: "password",
                   isSuffix: false,

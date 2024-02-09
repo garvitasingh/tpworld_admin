@@ -17,8 +17,10 @@ int inde = -1;
 int? userslength;
 
 final FirestoreService _firestoreService = FirestoreService();
+final TextEditingController _searchController = TextEditingController();
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
+String _searchText = '';
 
 class _UsersListViewState extends State<UsersListView> {
   @override
@@ -82,7 +84,7 @@ class _UsersListViewState extends State<UsersListView> {
                           barrierLabel: "fff",
                           context: context,
                           builder: (BuildContext context) {
-                            return const NotificationDialog();
+                            return NotificationDialog();
                           });
                     })
               ],
@@ -104,6 +106,8 @@ class _UsersListViewState extends State<UsersListView> {
                         return const Text('Users List is empty!');
                       }
                       List<Map<String, dynamic>> profiles = snapshot.data!;
+                      // Filter users based on search text
+
                       return Text(
                         "Users List (${profiles.length})",
                         style: const TextStyle(
@@ -117,6 +121,12 @@ class _UsersListViewState extends State<UsersListView> {
                 ),
                 Expanded(
                     child: TextFormField(
+                  controller: _searchController,
+                  onChanged: (value) {
+                    setState(() {
+                      _searchText = value;
+                    });
+                  },
                   decoration: const InputDecoration(
                       suffixIcon: Icon(
                         Icons.search,
@@ -141,23 +151,27 @@ class _UsersListViewState extends State<UsersListView> {
                 return const Text('No Users found.');
               } else {
                 List<Map<String, dynamic>> profiles = snapshot.data!;
-                userslength = profiles.length;
+                List<Map<String, dynamic>> filteredProfiles =
+                    profiles.where((profile) {
+                  String name = profile['name'].toString().toLowerCase();
+                  String phone = profile['phone'].toString().toLowerCase();
+                  return name.contains(_searchText.toLowerCase()) ||
+                      phone.contains(_searchText.toLowerCase());
+                }).toList();
+                userslength = filteredProfiles.length;
                 return ListView.builder(
                   shrinkWrap: true,
-                  itemCount: profiles.length,
+                  itemCount: filteredProfiles.length,
                   itemBuilder: (context, index) {
                     return InkWell(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => const AdminBannersView()));
+                       
                       },
-                      child: profiles[index]['isdelete'].toString() == "true"
+                      child: filteredProfiles[index]['isdelete'].toString() == "true"
                           ? SizedBox()
                           : ListTile(
-                              leading: profiles[index]['profileImage'] == "" ||
-                                      profiles[index]['profileImage'] == null
+                              leading: filteredProfiles[index]['profileImage'] == "" ||
+                                      filteredProfiles[index]['profileImage'] == null
                                   ? const CircleAvatar(
                                       radius: 30,
                                       backgroundImage: AssetImage(
@@ -166,18 +180,18 @@ class _UsersListViewState extends State<UsersListView> {
                                   : CircleAvatar(
                                       radius: 30,
                                       backgroundImage: NetworkImage(
-                                          profiles[index]['profileImage']
+                                          filteredProfiles[index]['profileImage']
                                               .toString()),
                                     ),
                               title: Text(
-                                profiles[index]['name'].toString(),
+                                filteredProfiles[index]['name'].toString(),
                                 style: const TextStyle(
                                     fontSize: 16,
                                     color: Colors.black,
                                     fontWeight: FontWeight.w400),
                               ),
                               subtitle: Text(
-                                profiles[index]['phone'].toString(),
+                                filteredProfiles[index]['phone'].toString(),
                                 style: const TextStyle(
                                     fontSize: 18,
                                     color: Colors.black,
@@ -187,12 +201,12 @@ class _UsersListViewState extends State<UsersListView> {
                                 width: 100,
                                 child: Row(
                                   children: [
-                                    profiles[index]['isHide'].toString() ==
+                                    filteredProfiles[index]['isHide'].toString() ==
                                             "true"
                                         ? IconButton(
                                             onPressed: () {
                                               _firestoreService.isHide(
-                                                  profiles[index]['id']
+                                                  filteredProfiles[index]['id']
                                                       .toString(),
                                                   'false');
                                             },
@@ -203,7 +217,7 @@ class _UsersListViewState extends State<UsersListView> {
                                         : IconButton(
                                             onPressed: () {
                                               _firestoreService.isHide(
-                                                  profiles[index]['id']
+                                                  filteredProfiles[index]['id']
                                                       .toString(),
                                                   'true');
                                             },
@@ -223,7 +237,7 @@ class _UsersListViewState extends State<UsersListView> {
                                           btnCancelOnPress: () {},
                                           btnOkOnPress: () {
                                             _firestoreService.isDelete(
-                                                profiles[index]['id']
+                                                filteredProfiles[index]['id']
                                                     .toString());
                                           },
                                         ).show();

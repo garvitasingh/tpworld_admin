@@ -6,36 +6,37 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tpworld_admin/utils/popup.dart';
-
+import 'package:http/http.dart' as http;
 import '../../../utils/colors.dart';
 import 'custom_textfield_widget.dart';
-import 'package:http/http.dart' as http;
 
-class AddCallDialog extends StatefulWidget {
+class EditCallDialog extends StatefulWidget {
   final TextEditingController notecontroller;
   final TextEditingController pricecontroller;
   final TextEditingController qtycontroller;
-  List totlusers;
   final TextEditingController target1controller;
   final TextEditingController target2controller;
   final TextEditingController stoplosscontroller;
   final TextEditingController typecallcontroller;
-  AddCallDialog(
+  List totlusers;
+  String id;
+  EditCallDialog(
       {super.key,
       required this.notecontroller,
-      required this.totlusers,
       required this.pricecontroller,
+      required this.totlusers,
       required this.qtycontroller,
       required this.target1controller,
       required this.target2controller,
       required this.stoplosscontroller,
+      required this.id,
       required this.typecallcontroller});
 
   @override
-  State<AddCallDialog> createState() => _AddCallDialogState();
+  State<EditCallDialog> createState() => _EditCallDialogState();
 }
 
-class _AddCallDialogState extends State<AddCallDialog> {
+class _EditCallDialogState extends State<EditCallDialog> {
   final List<String> dropdownValues = ['SELL', 'BUY'];
 
   String? selectedValue = "SELL";
@@ -141,7 +142,7 @@ class _AddCallDialogState extends State<AddCallDialog> {
                         items: dropdownValues.map((value) {
                           return DropdownMenuItem<String>(
                             value: value,
-                            child: Text("$value CALL"),
+                            child: Text("${value} CALL"),
                           );
                         }).toList(),
                         onChanged: (newValue) {
@@ -173,14 +174,14 @@ class _AddCallDialogState extends State<AddCallDialog> {
                   child: MaterialButton(
                     height: 50,
                     onPressed: () {
-                      _addCall();
+                      _editCall(widget.id);
                     },
                     shape: RoundedRectangleBorder(
                         side: const BorderSide(
                             color: Color(0xff4ACA36), width: 2),
                         borderRadius: BorderRadius.circular(5)),
                     child: const Text(
-                      "Add Call",
+                      "Edit Call",
                       style: TextStyle(
                         color: Color(0xff4ACA36),
                         fontWeight: FontWeight.w600,
@@ -197,44 +198,49 @@ class _AddCallDialogState extends State<AddCallDialog> {
     );
   }
 
-  Future<void> _addCall() async {
+  Future<void> _editCall(id) async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     CollectionReference collection = firestore.collection('Calls');
     DateTime now = DateTime.now();
     String formattedDateTime = DateFormat('dd/MM/yyyy hh:mma').format(now);
-
-    Set<String> uniqueUserIds = {};
-    Set<String> notifications = {};
+    DocumentSnapshot documentSnapshot = await collection.doc(id).get();
+    dynamic data = documentSnapshot.data();
     int qyt = int.parse(widget.qtycontroller.text.toString());
     int price = int.parse(widget.pricecontroller.text.toString());
     int investment = qyt * price;
     int loss = int.parse(widget.stoplosscontroller.text.toString());
-    int profit = 0;
+    int profit = int.parse(data['profilt'].toString());
     // int stoploss = investment - (qyt * loss);
+    //  await collection.doc(id).update({
+    //         'target2update': true,
+    //         'profilt': profit,
+    //         'target2': tar.toString()
+    //       });
 
-    await collection.doc().set({
-      'Note': widget.notecontroller.text,
-      'target1': widget.target1controller.text.toString(),
-      'target2': widget.target2controller.text.toString(),
+    await collection.doc(id).update({
+      'Note': widget.notecontroller.text.toString(),
+      'target1': data['target1update'] == true
+          ? data['target1'].toString()
+          : widget.target1controller.text.toString(),
+      'target2': data['target2update'] == true
+          ? data['target2'].toString()
+          : widget.target2controller.text.toString(),
       'quantity': widget.qtycontroller.text.toString(),
       'investment': investment.toString(),
-      'calltype': widget.typecallcontroller.text,
+      'calltype': widget.typecallcontroller.text.isEmpty
+          ? data['calltype'].toString()
+          : widget.typecallcontroller.text,
       'profilt': profit.toString(),
-      'stop_loss': loss.toString(),
+      'stop_loss': data['stoplossupdate'] == true
+          ? data['stop_loss'].toString()
+          : loss.toString(),
       'price': price.toString(),
-      'target1update': false,
-      'target2update': false,
-      'stoplossupdate': false,
-      'userids': uniqueUserIds,
-      'notifications': notifications,
-      'notificationhide': false,
       'timestamp': now,
       'datetime': formattedDateTime,
     });
     Navigator.pop(context);
-    showSuccessSnackBar(context, "${widget.typecallcontroller.text} Added!");
-    _sendnotificationtousers(widget.totlusers, widget.notecontroller.text,
-        price, widget.typecallcontroller.text);
+    showSuccessSnackBar(context, "${widget.typecallcontroller.text} Edited!");
+    _sendnotificationtousers(widget.totlusers, widget.notecontroller.text);
     widget.notecontroller.clear();
     widget.pricecontroller.clear();
     widget.qtycontroller.clear();
@@ -247,21 +253,23 @@ class _AddCallDialogState extends State<AddCallDialog> {
   }
 
   Future<void> _sendnotificationtousers(
-      List totlusers, documentName, price, calltype) async {
+    List totlusers,
+    documentName,
+  ) async {
     for (int i = 0; i < totlusers.length; i++) {
-      pushnotificationapi(documentName, price, totlusers[i]['token'], calltype);
-      addNotification(totlusers[i]['id'], documentName, "New Call Added!",
-          totlusers[i]['token'], calltype, price);
+      pushnotificationapi(documentName, totlusers[i]['token']);
+      addNotification(totlusers[i]['id'], documentName, "Call Edited!",
+          totlusers[i]['token']);
     }
   }
 
-  Future<void> addNotification(String userId, String title, String body,
-      String token, calltype, price) async {
+  Future<void> addNotification(
+      String userId, String title, String body, String token) async {
     try {
       // Create a new notification object
       Map<String, dynamic> notification = {
-        'title': 'Admin added new Call',
-        'body': "$calltype $title @$price",
+        'title': title,
+        'body': body,
         'time': DateTime
             .now(), // You can also store the timestamp of the notification
         'isRead': false, // Initially set the notification as unread
@@ -276,9 +284,10 @@ class _AddCallDialogState extends State<AddCallDialog> {
     }
   }
 
-  pushnotificationapi(title, price, token, calltype) async {
+  pushnotificationapi(title, token) async {
     var headers = {
-      'Authorization': 'key=$ServerKEY',
+      'Authorization':
+          'key=$ServerKEY',
       'Content-Type': 'application/json'
     };
     var request =
@@ -287,8 +296,8 @@ class _AddCallDialogState extends State<AddCallDialog> {
       "to": token,
       "priority": "high",
       "notification": {
-        "title": 'Admin Sent New Call to you',
-        "body": "$calltype $title @$price",
+        "title": title,
+        "body": "Edited!",
       }
     });
     request.headers.addAll(headers);
