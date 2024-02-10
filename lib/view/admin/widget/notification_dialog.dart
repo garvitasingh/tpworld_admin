@@ -63,14 +63,62 @@ class _NotificationDialogState extends State<NotificationDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
+    return Scaffold(
+      bottomSheet: Container(
+        //height: 60,
+        width: MediaQuery.of(context).size.width,
+        decoration: const BoxDecoration(color: Colors.white, boxShadow: [
+          BoxShadow(
+              offset: Offset(0, 0),
+              color: Color(0xff8ab7f440),
+              blurRadius: 5,
+              spreadRadius: 0)
+        ]),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              const SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: Container(
+                  // height: 40,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: Colors.blue),
+                  ),
+                  child: TextField(
+                    controller: _controller,
+                    maxLines: 10,
+                    minLines: 1,
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.all(10),
+                      border: InputBorder.none,
+                      hintText: "Enter Message",
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              InkWell(
+                onTap: mainNotification,
+                child: Image.asset(
+                  "assets/images/send.png",
+                  height: 50,
+                ),
+              ),
+              const SizedBox(
+                width: 10,
+              )
+            ],
+          ),
+        ),
       ),
-      elevation: 0.0,
-      alignment: Alignment.topRight,
-      backgroundColor: Colors.transparent,
-      child: Container(
+      body: Container(
         padding: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
           border: Border.all(color: Colors.blue),
@@ -102,12 +150,9 @@ class _NotificationDialogState extends State<NotificationDialog> {
                   Align(
                     alignment: Alignment.topRight,
                     child: IconButton(
-                      icon: Image.asset(
-                        "assets/images/setting.png",
-                        height: 24,
-                      ),
+                      icon: const Icon(Icons.close),
                       onPressed: () {
-                        // Navigator.of(context).pop();
+                        Navigator.of(context).pop();
                       },
                     ),
                   ),
@@ -121,7 +166,13 @@ class _NotificationDialogState extends State<NotificationDialog> {
                     } else if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     }
+
                     var data = snapshot.data!.docs;
+
+                    // Sort the data list based on the timestamp
+                    data.sort((a, b) => DateTime.parse(b['timestamp'])
+                        .compareTo(DateTime.parse(a['timestamp'])));
+
                     return ListView.separated(
                       physics: const NeverScrollableScrollPhysics(),
                       separatorBuilder: (context, index) => const SizedBox(
@@ -131,6 +182,8 @@ class _NotificationDialogState extends State<NotificationDialog> {
                           data.length, // Replace with actual notification count
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
+                        DateTime dateTime =
+                            DateTime.parse(data[index]['timestamp']);
                         var document = data[index];
                         var documentId = document.id;
                         return InkWell(
@@ -145,27 +198,23 @@ class _NotificationDialogState extends State<NotificationDialog> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    data[index]['notification'],
-                                    textAlign: TextAlign.start,
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
-                                        formatDate(data[index]['timestamp']
-                                            .toString()),
-                                        style: const TextStyle(
-                                            color: Colors.black),
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width -
+                                                70,
+                                        child: Text(
+                                          data[index]['notification'],
+                                          textAlign: TextAlign.start,
+                                          style: const TextStyle(
+                                            color: Color(0xff757575),
+                                            fontSize: 14.0,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
                                       ),
                                       InkWell(
                                         onTap: () {
@@ -177,6 +226,21 @@ class _NotificationDialogState extends State<NotificationDialog> {
                                         ),
                                       )
                                     ],
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        '${formatDate(data[index]['timestamp'])} ${formatTime(dateTime)}',
+                                        style: const TextStyle(
+                                            color: Color(0xff8a8a8a),
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w300),
+                                      )
+                                    ],
                                   )
                                 ],
                               ),
@@ -186,6 +250,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
                       },
                     );
                   }),
+              const SizedBox(height: 20.0),
               InkWell(
                 onTap: () {
                   deleteAllNotifications();
@@ -195,53 +260,27 @@ class _NotificationDialogState extends State<NotificationDialog> {
                   children: [
                     Text(
                       "Delete All",
-                      style: TextStyle(color: Colors.red),
+                      style: TextStyle(
+                        color: Colors.red,
+                      ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 10.0),
-              Row(crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: Container(
-                     // height: 40,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(6),
-                        border: Border.all(color: Colors.blue),
-                      ),
-                      child: TextField(
-                        controller: _controller,
-                        maxLines: 10,
-                        minLines: 1,
-                        decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.all(10),
-                          border: InputBorder.none,
-                          hintText: "Enter Message",
-                        ),
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: mainNotification,
-                    child: Image.asset(
-                      "assets/images/send.png",
-                      height: 50,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  )
-                ],
-              ),
+              const SizedBox(height: 100.0),
             ],
           ),
         ),
       ),
     );
+  }
+
+  String formatTime(DateTime dateTime) {
+    // Format the time using HH:mm:ss format
+    String formattedTime =
+        "${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}";
+
+    return formattedTime;
   }
 
   Future<void> markNotificationAsRead(String notificationId) async {
@@ -277,7 +316,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
     } else if (date.year == yesterday.year &&
         date.month == yesterday.month &&
         date.day == yesterday.day) {
-      return 'yesterday';
+      return 'yes';
     } else if (date.year == dayBeforeYesterday.year &&
         date.month == dayBeforeYesterday.month &&
         date.day == dayBeforeYesterday.day) {
@@ -287,10 +326,21 @@ class _NotificationDialogState extends State<NotificationDialog> {
     }
   }
 
+  // String formatTime(DateTime dateTime) {
+  //   String hour = dateTime.hour.toString().padLeft(2, '0');
+  //   String minute = dateTime.minute.toString().padLeft(2, '0');
+  //   return '$hour:$minute';
+  // }
+
+  String formatTimeFromTimestamp(Timestamp timestamp) {
+    DateTime dateTime =
+        timestamp.toDate(); // Convert Firestore Timestamp to DateTime
+    return formatTime(dateTime);
+  }
+
   pushnotificationapi(body, token) async {
     var headers = {
-      'Authorization':
-           'key=$ServerKEY',
+      'Authorization': 'key=$ServerKEY',
       'Content-Type': 'application/json'
     };
     var request =

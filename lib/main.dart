@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:tpworld_admin/firebase_options.dart';
 import 'package:tpworld_admin/routes.dart';
+import 'package:tpworld_admin/view/splash_view.dart';
 
 String? DEVICETOKEN;
 void main() async {
@@ -53,8 +54,9 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
           // Add your theme configurations here
           ),
-      initialRoute: Routes.splash, // Replace with your initial route
-      onGenerateRoute: Routes.generateRoute,
+      home: SplashView(),
+      // initialRoute: Routes.splash, // Replace with your initial route
+      // onGenerateRoute: Routes.generateRoute,
     );
   }
 }

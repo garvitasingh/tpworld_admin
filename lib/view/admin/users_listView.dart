@@ -159,49 +159,77 @@ class _UsersListViewState extends State<UsersListView> {
                       phone.contains(_searchText.toLowerCase());
                 }).toList();
                 userslength = filteredProfiles.length;
-                return ListView.builder(
+                return ListView.separated(
+                  separatorBuilder: (context, index) => Divider(
+                    color: Color(0xff5496EE),
+                  ),
                   shrinkWrap: true,
                   itemCount: filteredProfiles.length,
                   itemBuilder: (context, index) {
                     return InkWell(
-                      onTap: () {
-                       
-                      },
-                      child: filteredProfiles[index]['isdelete'].toString() == "true"
+                      onTap: () {},
+                      child: filteredProfiles[index]['isdelete'].toString() ==
+                              "true"
                           ? SizedBox()
                           : ListTile(
-                              leading: filteredProfiles[index]['profileImage'] == "" ||
-                                      filteredProfiles[index]['profileImage'] == null
+                              minLeadingWidth: 3,
+                              leading: filteredProfiles[index]
+                                              ['profileImage'] ==
+                                          "" ||
+                                      filteredProfiles[index]['profileImage'] ==
+                                          null
                                   ? const CircleAvatar(
-                                      radius: 30,
+                                      radius: 27,
                                       backgroundImage: AssetImage(
                                           "assets/images/avatar.png"),
                                     )
                                   : CircleAvatar(
-                                      radius: 30,
+                                      radius: 27,
                                       backgroundImage: NetworkImage(
-                                          filteredProfiles[index]['profileImage']
+                                          filteredProfiles[index]
+                                                  ['profileImage']
                                               .toString()),
                                     ),
                               title: Text(
                                 filteredProfiles[index]['name'].toString(),
                                 style: const TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 15,
                                     color: Colors.black,
                                     fontWeight: FontWeight.w400),
                               ),
-                              subtitle: Text(
-                                filteredProfiles[index]['phone'].toString(),
-                                style: const TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w700),
+                              subtitle: Stack(
+                                children: [
+                                  Positioned(
+                                    child: Text(
+                                      filteredProfiles[index]['phone']
+                                          .toString(),
+                                      style: const TextStyle(
+                                          fontSize: 16,
+                                          color: Color(0xff00367F),
+                                          fontWeight: FontWeight.w900),
+                                    ),
+                                  ),
+                                  // Positioned(
+                                  //     right: filteredProfiles[index]
+                                  //             ['phoneVerified']? 45:75,
+                                  //     child: filteredProfiles[index]
+                                  //             ['phoneVerified']
+                                  //         ? Image.asset(
+                                  //             "assets/images/tick.png",
+                                  //             height: 10,
+                                  //           )
+                                  //         : Image.asset(
+                                  //             "assets/images/tick_light.png",
+                                  //             height: 10,
+                                  //           ))
+                                ],
                               ),
                               trailing: Container(
-                                width: 100,
+                                width: 90,
                                 child: Row(
                                   children: [
-                                    filteredProfiles[index]['isHide'].toString() ==
+                                    filteredProfiles[index]['isHide']
+                                                .toString() ==
                                             "true"
                                         ? IconButton(
                                             onPressed: () {

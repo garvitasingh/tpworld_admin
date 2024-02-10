@@ -153,13 +153,23 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                   actions: [
                     InkWell(
                       onTap: () {
-                        showDialog(
-                            barrierColor: Colors.transparent,
-                            barrierLabel: "fff",
-                            context: context,
-                            builder: (BuildContext context) {
-                              return NotificationDialog();
-                            });
+                        // showDialog(
+                        //     barrierColor: Colors.transparent,
+                        //     barrierLabel: "fff",
+                        //     context: context,
+                        //     builder: (BuildContext context) {
+                        //       return NotificationDialog();
+                        //     });
+                        showGeneralDialog(
+                          context: context,
+                          pageBuilder: (
+                            BuildContext context,
+                            Animation<double> animation,
+                            Animation<double> secondaryAnimation,
+                          ) {
+                            return NotificationDialog();
+                          },
+                        );
                       },
                       child: Container(
                           margin: const EdgeInsets.only(right: 15),
@@ -187,33 +197,32 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                               stream: _firestoreService.getProfilesStream(),
                               builder: (context, snapshot) {
                                 profiles = snapshot.data!;
-                                return const CircularProgressIndicator
-                                    .adaptive();
+                                return Text("");
                               }),
                           Positioned(
                             top: 0,
                             child: Container(
-                              height: 55,
-                              width: w - 40,
+                               height: 45,
+                          width: w - 40,
                               decoration: BoxDecoration(
                                 border: Border.all(
                                   color: const Color(0xff00367F),
                                 ),
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(
-                                  10.0,
+                                  12.0,
                                 ),
                               ),
                               child: TabBar(
-                                labelStyle: const TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w600),
+                                // labelStyle: const TextStyle(
+                                //     fontSize: 20, fontWeight: FontWeight.w400),
                                 onTap: (value) {},
                                 indicatorSize: TabBarIndicatorSize.tab,
                                 controller: _tabController,
                                 // give the indicator a decoration (color and border radius)
                                 indicator: BoxDecoration(
                                   borderRadius: BorderRadius.circular(
-                                    5.0,
+                                    10.0,
                                   ),
                                   color: const Color(0xff00367F),
                                 ),
@@ -249,7 +258,7 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                       child: Column(
                         children: [
                           const SizedBox(
-                            height: 50,
+                            height: 30,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
@@ -535,7 +544,7 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                                                       .circular(
                                                                           5),
                                                             ),
-                                                            shadows:  [
+                                                            shadows: [
                                                               BoxShadow(
                                                                 color: documents[index]['calltype']
                                                                             .toString() ==
@@ -545,8 +554,9 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                                                     : const Color(
                                                                         0xffEC1616),
                                                                 blurRadius: 2,
-                                                                offset: const Offset(
-                                                                    0, 1),
+                                                                offset:
+                                                                    const Offset(
+                                                                        0, 1),
                                                                 spreadRadius: 0,
                                                               )
                                                             ],
@@ -1126,6 +1136,8 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                                       false
                                                   ? const SizedBox()
                                                   : ListView.separated(
+                                                      physics:
+                                                          NeverScrollableScrollPhysics(),
                                                       separatorBuilder:
                                                           (context, index) =>
                                                               const Divider(
@@ -1433,7 +1445,7 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                                                       .circular(
                                                                           5),
                                                             ),
-                                                            shadows:  [
+                                                            shadows: [
                                                               BoxShadow(
                                                                 color: documents[index]['calltype']
                                                                             .toString() ==
@@ -1443,8 +1455,9 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                                                     : const Color(
                                                                         0xffEC1616),
                                                                 blurRadius: 2,
-                                                                offset: const Offset(
-                                                                    0, 1),
+                                                                offset:
+                                                                    const Offset(
+                                                                        0, 1),
                                                                 spreadRadius: 0,
                                                               )
                                                             ],
@@ -2000,7 +2013,7 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                                       height: 50,
                                                     ),
                                                   ),
-                                                 IconButton(
+                                                  IconButton(
                                                       onPressed: () {
                                                         hideunhideNotification(
                                                             documentId);
@@ -2024,6 +2037,8 @@ class _AdminHomePageViewState extends State<AdminHomePageView>
                                                       false
                                                   ? const SizedBox()
                                                   : ListView.separated(
+                                                      physics:
+                                                          NeverScrollableScrollPhysics(),
                                                       separatorBuilder:
                                                           (context, index) =>
                                                               const Divider(
