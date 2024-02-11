@@ -1,4 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tpworld_admin/controller/firestore_controller.dart';
@@ -18,7 +19,7 @@ int? userslength;
 
 final FirestoreService _firestoreService = FirestoreService();
 final TextEditingController _searchController = TextEditingController();
-
+final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 final FirebaseAuth _auth = FirebaseAuth.instance;
 String _searchText = '';
 
@@ -209,19 +210,19 @@ class _UsersListViewState extends State<UsersListView> {
                                           fontWeight: FontWeight.w900),
                                     ),
                                   ),
-                                  // Positioned(
-                                  //     right: filteredProfiles[index]
-                                  //             ['phoneVerified']? 45:75,
-                                  //     child: filteredProfiles[index]
-                                  //             ['phoneVerified']
-                                  //         ? Image.asset(
-                                  //             "assets/images/tick.png",
-                                  //             height: 10,
-                                  //           )
-                                  //         : Image.asset(
-                                  //             "assets/images/tick_light.png",
-                                  //             height: 10,
-                                  //           ))
+                                  Positioned(
+                                      right: filteredProfiles[index]
+                                              ['phoneVerified']? 45:75,
+                                      child: filteredProfiles[index]
+                                              ['phoneVerified']
+                                          ? Image.asset(
+                                              "assets/images/tick.png",
+                                              height: 10,
+                                            )
+                                          : Image.asset(
+                                              "assets/images/tick_light.png",
+                                              height: 10,
+                                            ))
                                 ],
                               ),
                               trailing: Container(
@@ -263,10 +264,16 @@ class _UsersListViewState extends State<UsersListView> {
                                           desc:
                                               'Are you sure want to delete this user?',
                                           btnCancelOnPress: () {},
-                                          btnOkOnPress: () {
-                                            _firestoreService.isDelete(
-                                                filteredProfiles[index]['id']
-                                                    .toString());
+                                          btnOkOnPress: () async {
+                                            // _firestoreService.isDelete(
+                                            //     filteredProfiles[index]['id']
+                                            //         .toString());
+                                            await _firestore
+                                                .collection('users')
+                                                .doc(filteredProfiles[index]
+                                                        ['id']
+                                                    .toString())
+                                                .delete();
                                           },
                                         ).show();
                                       },
